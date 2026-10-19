@@ -9,16 +9,17 @@
 </head>
 <body>
     <div class="header">
-        <h1>Good Morning, Codynn!</h1>
+        <h1 id="greeting">Good Morning, Codynn!</h1>
         <div class="header-controls">
-            <div class="dropdown">
-                Daily <i class="fas fa-chevron-down"></i>
+            <div class="dropdown" id="periodDropdown" onclick="openPeriodMenu(this)">
+                <span id="periodLabel">Daily</span> <i class="fas fa-chevron-down"></i>
             </div>
-            <div class="date-picker">
+            <div class="date-picker" id="datePicker" onclick="openDatePicker()">
                 <i class="fas fa-calendar"></i>
-                16 January 2025
+                <span id="dateLabel">16 January 2025</span>
+                <input type="date" id="headerDate" class="hidden-date" onchange="changeRefDate(this.value)" onclick="event.stopPropagation()">
             </div>
-            <button class="export-btn">
+            <button class="export-btn" onclick="exportCSV()">
                 <i class="fas fa-download"></i>
                 Export
             </button>
@@ -30,10 +31,10 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Monthly Income</h3>
-                    <button class="card-menu"><i class="fas fa-ellipsis-h"></i></button>
+                    <button class="card-menu" onclick="openCardMenu(this, 'income')"><i class="fas fa-ellipsis-h"></i></button>
                 </div>
-                <div class="amount income-amount">$2,645.00</div>
-                <div class="change">
+                <div class="amount income-amount" id="monthlyIncomeValue">$2,645.00</div>
+                <div class="change" id="incomeChange">
                     <i class="fas fa-arrow-up"></i>
                     12% vs last month
                 </div>
@@ -42,10 +43,10 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Monthly Expenses</h3>
-                    <button class="card-menu"><i class="fas fa-ellipsis-h"></i></button>
+                    <button class="card-menu" onclick="openCardMenu(this, 'expenses')"><i class="fas fa-ellipsis-h"></i></button>
                 </div>
-                <div class="amount income-amount">$1,895.00</div>
-                <div class="change">
+                <div class="amount income-amount" id="monthlyExpensesValue">$1,895.00</div>
+                <div class="change" id="expensesChange">
                     <i class="fas fa-arrow-up"></i>
                     12% vs last month
                 </div>
@@ -54,11 +55,11 @@
             <div class="card my-card">
                 <div class="card-header">
                     <h3 class="card-title">My Card</h3>
-                    <button class="card-menu" style="color: white"><i class="fas fa-ellipsis-h"></i></button>
+                    <button class="card-menu" style="color: white" onclick="openCardMenu(this, 'card')"><i class="fas fa-ellipsis-h"></i></button>
                 </div>
                 <div style="font-size: 0.75rem; opacity: 0.8; margin-bottom: 1rem;">Linked to your primary wallet</div>
                 <div class="card-chip"></div>
-                <div class="card-number">5435 2735 0037 0015</div>
+                <div class="card-number" id="cardNumber">5435 2735 0037 0015</div>
                 <div class="card-holder">Codynn</div>
                 
                 <div class="card-logo">
@@ -68,9 +69,9 @@
 
                 <div class="spending-section">
                     <div style="margin-bottom: 0.5rem; font-size: 0.75rem; opacity: 0.9;">Spending Limit</div>
-                    <div class="spending-limit">$4,645.00</div>
+                    <div class="spending-limit" id="spendingLimit">$4,645.00</div>
                     <div class="progress-bar">
-                        <div class="progress-fill"></div>
+                        <div class="progress-fill" id="progressFill"></div>
                     </div>
                 </div>
             </div>
@@ -80,78 +81,48 @@
                     <div class="card-header">
                         <h3 class="card-title">Overview</h3>
                         <div style="display: flex; gap: 1rem;">
-                            <div class="dropdown">Yearly <i class="fas fa-chevron-down"></i></div>
-                            <button class="filter-btn">
+                            <div class="dropdown" id="yearDropdown" onclick="openYearMenu(this)"><span id="yearLabel">Yearly</span> <i class="fas fa-chevron-down"></i></div>
+                            <button class="filter-btn" onclick="openChartFilterMenu(this)">
                                 <i class="fas fa-filter"></i>
-                                Filter
+                                <span id="chartFilterLabel">Filter</span>
                             </button>
                         </div>
                     </div>
 
-                    <div class="chart-container">
-                        <div class="chart-bar" style="height: 120px;"></div>
-                        <div class="chart-bar" style="height: 80px;"></div>
-                        <div class="chart-bar active" style="height: 200px;">
-                            <div style="position:absolute ;top: -30px;left: 50%; transform: translateX(-50%) ; background: white;padding: 0.25rem 0.5rem; border-radius: 4px;box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) ; font-size: 0.75rem;">
-                                <div style="font-weight: 600;">April 2025</div>
-                                <div style="color: #10b981;">Income: $894</div>
-                                <div style="color: #ea580c;">Expenses: $768</div>
-                            </div>
-                            <div class="chart-bar-income" style="height: 120px;"></div>
-                            <div class="chart-bar-expenses" style="height: 80px;"></div>
-                        </div>
-                        <div class="chart-bar" style="height: 150px;"></div>
-                        <div class="chart-bar" style="height: 90px;"></div>
-                        <div class="chart-bar" style="height: 110px;"></div>
-                        <div class="chart-bar" style="height: 130px;"></div>
-                        <div class="chart-bar" style="height: 100px;"></div>
-                        <div class="chart-bar" style="height: 80px;"></div>
-                        <div class="chart-bar" style="height: 140px;"></div>
-                        <div class="chart-bar" style="height: 95px;"></div>
-                    </div>
+                    <!-- Las barras se generan desde script.js (renderChart) -->
+                    <div class="chart-container" id="chartContainer"></div>
 
-                    <div class="chart-labels">
-                        <span>Feb</span>
-                        <span>Mar</span>
-                        <span>Apr</span>
-                        <span>May</span>
-                        <span>Jun</span>
-                        <span>Jul</span>
-                        <span>Aug</span>
-                        <span>Sep</span>
-                        <span>Oct</span>
-                        <span>Nov</span>
-                        <span>Dec</span>
-                    </div>
+                    <!-- Las etiquetas de los meses se generan desde script.js -->
+                    <div class="chart-labels" id="chartLabels"></div>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">All Expenses</h3>
-                        <button class="card-menu"><i class="fas fa-ellipsis-h"></i></button>
+                        <button class="card-menu" onclick="openCardMenu(this, 'allExpenses')"><i class="fas fa-ellipsis-h"></i></button>
                     </div>
 
                     <div style="font-size: 0.75rem; color: #6b7280 ; margin-bottom: 1rem;">Spending breakdown by category</div>
 
                     <div class="expenses-breakdown">
-                        <div class="total-expenses">$24,645.00</div>
+                        <div class="total-expenses" id="totalExpenses">$24,645.00</div>
 
                         <div class="period-tabs">
-                            <span class="period-tab">Daily</span>
-                            <span class="period-tab">Weekly</span>
-                            <span class="period-tab active">Monthy</span>
+                            <span class="period-tab" data-period="daily" onclick="selectPeriodTab('daily')">Daily</span>
+                            <span class="period-tab" data-period="weekly" onclick="selectPeriodTab('weekly')">Weekly</span>
+                            <span class="period-tab active" data-period="monthly" onclick="selectPeriodTab('monthly')">Monthly</span>
                         </div>
 
                         <div class="period-amounts">
-                            <span>Daily</span>
-                            <span>Weekly</span>
-                            <span>Monthly</span>
+                            <span data-period="daily">Daily</span>
+                            <span data-period="weekly">Weekly</span>
+                            <span data-period="monthly">Monthly</span>
                         </div>
 
                         <div class="period-values">
-                            <span>$1,345</span>
-                            <span>$7,136</span>
-                            <span>$14,927</span>
+                            <span data-period="daily" id="valueDaily">$1,345</span>
+                            <span data-period="weekly" id="valueWeekly">$7,136</span>
+                            <span data-period="monthly" id="valueMonthly">$14,927</span>
                         </div>
 
                         <div class="color-bar"></div>
@@ -162,45 +133,59 @@
                                     <div class="category-dot dot-food"></div>
                                     <span>Food & Health</span>
                                 </div>
-                                <span>863</span>
+                                <span id="cat-food">863</span>
                             </li>
                             <li class="expense-category">
                                 <div class="category-info">
                                     <div class="category-dot dot-entertainment"></div>
                                     <span>Entertainments</span>
                                 </div>
-                                <span>248</span>
+                                <span id="cat-entertainment">248</span>
                             </li>
                             <li class="expense-category">
                                 <div class="category-info">
                                     <div class="category-dot dot-shopping"></div>
                                     <span>Shopping</span>
                                 </div>
-                                <span>1835</span>
+                                <span id="cat-shopping">1835</span>
                             </li>
                             <li class="expense-category">
                                 <div class="category-info">
                                     <div class="category-dot dot-investment"></div>
                                     <span>Investment</span>
                                 </div>
-                                <span>1835</span>
+                                <span id="cat-investment">1835</span>
+                            </li>
+                            <li class="expense-category">
+                                <div class="category-info">
+                                    <div class="category-dot dot-transport"></div>
+                                    <span>Transport</span>
+                                </div>
+                                <span id="cat-transport">0</span>
+                            </li>
+                            <li class="expense-category">
+                                <div class="category-info">
+                                    <div class="category-dot dot-other"></div>
+                                    <span>Other</span>
+                                </div>
+                                <span id="cat-other">0</span>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card trasactions-section">
+        <div class="card transactions-section">
             <div class="card-header">
                 <h3 class="card-title">Recent Transactions</h3>
                 <div class="filters">
-                    <button class="filter-btn">
+                    <button class="filter-btn" onclick="openSortMenu(this)">
                         <i class="fas fa-sort"></i>
-                        short
+                        <span id="sortLabel">Sort</span>
                     </button>
-                    <button class="filter-btn">
+                    <button class="filter-btn" onclick="openTypeFilterMenu(this)">
                         <i class="fas fa-filter"></i>
-                        Filter
+                        <span id="typeFilterLabel">Filter</span>
                     </button>
                 </div>
             </div>
@@ -208,38 +193,15 @@
             <table class="transactions-table">
                 <thead>
                     <tr>
-                        <th>Date <i class="fas fa-sort"></i></th>
-                        <th>category <i class="fas fa-sort"></i></th>
-                        <th>Amount <i class="fas fa-sort"></i></th>
+                        <th data-sort="date" onclick="sortBy('date')">Date <i class="fas fa-sort"></i></th>
+                        <th data-sort="category" onclick="sortBy('category')">Category <i class="fas fa-sort"></i></th>
+                        <th data-sort="amount" onclick="sortBy('amount')">Amount <i class="fas fa-sort"></i></th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
-                <body>
-                   <tr>
-                    <td>Jan 14,2025</td>
-                    <td>Subscription</td>
-                    <td>$440.00</td>
-                    <td><span class="status-succes">Success</span></td>
-                    <td><button class="action-btn"><i class="fas fa-ellipsis-h"></i></button></td>
-                   </tr> 
-
-                   <tr>
-                    <td>Jan 10,2025</td>
-                    <td>Subscription</td>
-                    <td>$440.00</td>
-                    <td><span class="status-succes">Success</span></td>
-                    <td><button class="action-btn"><i class="fas fa-ellipsis-h"></i></button></td>
-                   </tr>
-
-                   <tr>
-                    <td>Jan 8,2025</td>
-                    <td>Subscription</td>
-                    <td>$440.00</td>
-                    <td><span class="status-succes">Success</span></td>
-                    <td><button class="action-btn"><i class="fas fa-ellipsis-h"></i></button></td>
-                   </tr>
-                </body>
+                <!-- Las filas se generan desde script.js (renderTable) -->
+                <tbody id="transactionsBody"></tbody>
             </table>
         </div>
     </div>
@@ -266,7 +228,7 @@
                 <form  id="incomeForm" autocomplete="off">
                     <div class="form-group">
                         <label class="form-label">Amount</label>
-                        <input type="number" class="form-input" id="incomeAmount" placeholder="Enter Amount" required>
+                        <input type="number" class="form-input" id="incomeAmount" placeholder="Enter Amount" min="0" step="0.01" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Category</label>
@@ -283,7 +245,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Description</label>
-                        <input type="text" class="form-input" id="incomeDescription" placeholder="Enter description" required>
+                        <input type="text" class="form-input" id="incomeDescription" placeholder="Enter description">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Date</label>
@@ -310,7 +272,7 @@
                 <form  id="expenseForm" autocomplete="off">
                     <div class="form-group">
                         <label class="form-label">Amount</label>
-                        <input type="number" class="form-input" id="expenseAmount" placeholder="Enter Amount" required>
+                        <input type="number" class="form-input" id="expenseAmount" placeholder="Enter Amount" min="0" step="0.01" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Category</label>
@@ -327,7 +289,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Description</label>
-                        <input type="text" class="form-input" id="expenseDescription" placeholder="Enter description" required>
+                        <input type="text" class="form-input" id="expenseDescription" placeholder="Enter description">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Date</label>
@@ -340,8 +302,7 @@
                 <button class="btn btn-primary" onclick="addExpense()">Add Expense</button>
             </div>
         </div>
-
-
+    </div>
 
     <script src="script.js"></script>
 </body>
